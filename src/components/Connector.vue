@@ -22,6 +22,14 @@
                       stroke="#04859D"
                       stroke-width="3"
                 />
+
+                <circle :cx="makeConnectionLineParams.lineStart.x"
+                        :cy="makeConnectionLineParams.lineStart.y"
+                        r="5"
+                        stroke="#206876"
+                        stroke-width="4"
+                        fill="white"
+                />
             </svg>
         </template>
         <template v-for="(connection,key) in myConnections">
@@ -160,16 +168,8 @@
                 retObj.width = retObj.maxX - retObj.minX;
                 retObj.height = retObj.maxY - retObj.minY;
 
-                retObj.top = 0;
-                if (connection.start.getBoundingClientRect().bottom > connection.end.getBoundingClientRect().bottom) {
-                    retObj.top = connection.end.getBoundingClientRect().bottom - connection.start.getBoundingClientRect().bottom;
-                }
-
-                retObj.left = 0;
-                if (connection.start.getBoundingClientRect().left > connection.end.getBoundingClientRect().left) {
-                    retObj.left = connection.end.getBoundingClientRect().left - connection.start.getBoundingClientRect().left;
-                }
-
+                retObj.top = retObj.minY - connection.start.getBoundingClientRect().top;
+                retObj.left = retObj.minX - connection.start.getBoundingClientRect().left;
 
                 //>>> устанавливаем на верхний левый угол
                 retObj.lineStart = {
