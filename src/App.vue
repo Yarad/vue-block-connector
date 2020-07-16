@@ -1,28 +1,62 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <img alt="Vue logo" src="./assets/logo.png">
+        <div>
+            <Connector>
+                <div class="my-block blue"></div>
+            </Connector>
+
+            <Connector>
+                <div class="my-block green"></div>
+            </Connector>
+        </div>
+        <div>
+            <Connector>
+                <div class="my-block blue"></div>
+            </Connector>
+
+            <Connector>
+                <div class="my-block green"></div>
+            </Connector>
+        </div>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import {mapGetters} from 'vuex'
+    import Connector from "./components/Connector";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            Connector
+        },
+        computed:{
+            ...mapGetters(['connections'])
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    #app {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
+
+    .my-block {
+        width: 80px;
+        height: 40px;
+    }
+
+    .my-block.green {
+        background: #558049;
+    }
+
+    .my-block.blue {
+        background: #427cba;
+    }
 </style>
