@@ -4,6 +4,26 @@
          @mousedown.prevent="handleOnMouseDown($event)"
          @mouseup.prevent="handleOnMouseUp($event)"
     >
+        <template v-if="mouseIsPressed">
+            <svg :width="makeConnectionLineParams.width"
+                 :height="makeConnectionLineParams.height"
+                 :style="{
+                     'left': +makeConnectionLineParams.left + 'px',
+                     'top': +makeConnectionLineParams.top + 'px',
+                     'z-index': 30
+                 }"
+                 stroke-opacity="0.6"
+                 xmlns="http://www.w3.org/2000/svg">
+
+                <line :x1="makeConnectionLineParams.lineStart.x"
+                      :y1="makeConnectionLineParams.lineStart.y"
+                      :x2="makeConnectionLineParams.lineEnd.x"
+                      :y2="makeConnectionLineParams.lineEnd.y"
+                      stroke="#04859D"
+                      stroke-width="3"
+                />
+            </svg>
+        </template>
         <template v-for="(connection,key) in myConnections">
             <svg :width="allDrawingParams[key].width"
                  :height="allDrawingParams[key].height"
@@ -48,12 +68,56 @@
 
     export default {
         name: "Connector",
+        data() {
+            return {
+                mouseIsPressed: false,
+                lastElement: {}, //при событии клика запоминаем место
+                makeConnectionLineParams: {
+                    lineStart: {},
+                    lineEnd: {}
+                } //параметры линии, отрисовываемой в процессе движения мышью
+            }
+        },
         methods: {
             ...mapMutations(['_currConnection', '_addConnection']),
+            handleOnMouseMove(e) {
+                this.makeConnectionLineParams = this.drawerParams({
+                    start: this.lastElement,
+                    end: {
+                        getBoundingClientRect: () => {
+                            return {
+                                x: e.clientX,
+                                y: e.clientY,
+                                left: e.clientX,
+                                top: e.clientY,
+                                bottom: e.clientY + 2,
+                                right: e.clientX + 2,
+                                width: 2,
+                                height: 2
+                            }
+                        }
+                    }
+                });
+            },
             handleOnMouseDown(e) {
+
+                this.lastElement = e.target.closest('.connector-wrapper');
+                if (!this.lastElement) {
+                    console.log('Cannot find element');
+                    return;
+                }
+
+                this.mouseIsPressed = true;
+                document.addEventListener('mousemove', this.handleOnMouseMove);
+                document.addEventListener('mouseup', () => {
+                    this.mouseIsPressed = false;
+                    this.lastMouseCoords = {};
+                    document.removeEventListener('mousemove', this.handleOnMouseMove);
+                })
+
                 this._currConnection({start: e.currentTarget, end: null})
-                console.log('start set => ');
-                console.log(e.currentTarget);
+                //console.log('start set => ');
+                //console.log(e.currentTarget);
             },
             handleOnMouseUp(e) {
                 if (!this.currConnection.start || this.currConnection.start === e.currentTarget) {
@@ -67,8 +131,8 @@
 
                 this._currConnection({});
                 this._addConnection(newConnection)
-                console.log('end set => ');
-                console.log(e.currentTarget);
+                //console.log('end set => ');
+                //console.log(e.currentTarget);
             },
             drawerParams(connection) {
                 console.log('called');
