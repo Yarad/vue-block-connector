@@ -2,20 +2,20 @@
     <div id="app">
         <img alt="Vue logo" src="./assets/logo.png">
         <div>
-            <Connector>
+            <Connector id="c1">
                 <div class="my-block blue"></div>
             </Connector>
 
-            <Connector>
+            <Connector id="c2">
                 <div class="my-block green"></div>
             </Connector>
         </div>
         <div>
-            <Connector>
+            <Connector id="c3">
                 <div class="my-block blue"></div>
             </Connector>
 
-            <Connector>
+            <Connector  id="c4">
                 <div class="my-block green"></div>
             </Connector>
         </div>
@@ -31,8 +31,8 @@
         components: {
             Connector
         },
-        computed:{
-            ...mapGetters(['connections'])
+        computed: {
+            ...mapGetters('connections', ['connections'])
         }
     }
 </script>

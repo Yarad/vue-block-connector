@@ -1,6 +1,7 @@
 <template>
     <div class="connector-wrapper"
          ref="currWrapper"
+         :id="id"
          @mousedown.prevent="handleOnMouseDown($event)"
          @mouseup.prevent="handleOnMouseUp($event)"
     >
@@ -76,6 +77,11 @@
 
     export default {
         name: "Connector",
+        props: {
+            id: {
+                required: true
+            }
+        },
         data() {
             return {
                 mouseIsPressed: false,
@@ -87,7 +93,7 @@
             }
         },
         methods: {
-            ...mapMutations(['_currConnection', '_addConnection']),
+            ...mapMutations('connections', ['_currConnection', '_addConnection']),
             handleOnMouseMove(e) {
                 this.makeConnectionLineParams = this.drawerParams({
                     start: this.lastElement,
@@ -117,13 +123,8 @@
 
                 this.mouseIsPressed = true;
                 document.addEventListener('mousemove', this.handleOnMouseMove);
-                document.addEventListener('mouseup', () => {
-                    this.mouseIsPressed = false;
-                    this.lastMouseCoords = {};
-                    document.removeEventListener('mousemove', this.handleOnMouseMove);
-                })
 
-                this._currConnection({start: e.currentTarget, end: null})
+                this._currConnection({start: e.currentTarget.id, end: null})
                 //console.log('start set => ');
                 //console.log(e.currentTarget);
             },
@@ -133,10 +134,10 @@
                 }
 
                 let newConnection = {
-                    start: this.currConnection.start,
-                    end: e.currentTarget
+                    start: this.currConnection.start.id,
+                    end: e.currentTarget.id
                 }
-
+                debugger;
                 this._currConnection({});
                 this._addConnection(newConnection)
                 //console.log('end set => ');
@@ -239,7 +240,7 @@
             }
         },
         computed: {
-            ...mapGetters(['currConnection', 'connections']),
+            ...mapGetters('connections', ['currConnection', 'connections']),
             myConnections() {
                 //возвращает список соединений, где данный элемент является стартовым
 
@@ -262,6 +263,11 @@
             }
         },
         mounted() {
+            document.addEventListener('mouseup', () => {
+                this.mouseIsPressed = false;
+                this.lastMouseCoords = {};
+                document.removeEventListener('mousemove', this.handleOnMouseMove);
+            })
         }
     }
 </script>

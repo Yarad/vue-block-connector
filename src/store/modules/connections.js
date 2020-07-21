@@ -1,13 +1,25 @@
 import Vue from 'vue'
 
+//храним только id, возвращаем только DOM
 export default {
+    namespaced: true,
     state: {
         connections: [],
         currConnection: {} // {start:___, end___}
     },
     getters: {
-        connections: state => state.connections,
-        currConnection: state => state.currConnection,
+        connections: state => state.connections.map((value) => {
+            return {
+                start: document.getElementById(value.start),
+                end: document.getElementById(value.end)
+            }
+        }),
+        currConnection: state => {
+            return {
+                start: document.getElementById(state.currConnection.start),
+                end: document.getElementById(state.currConnection.end)
+            }
+        },
     },
     mutations: {
         _connections(state, connections) {
