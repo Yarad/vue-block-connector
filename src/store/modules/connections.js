@@ -42,6 +42,16 @@ export default {
             } else {
                 state.connections.push(connectionObj)
             }
+        },
+        _destroyConnection(state, connectionObj) {
+            let val;
+            for (let i in state.connections) {
+                val = state.connections[i];
+                if ((val.start === connectionObj.start && val.end === connectionObj.end) ||
+                    (val.end === connectionObj.start && val.start === connectionObj.end)) {
+                    state.connections.splice(i);
+                }
+            }
         }
     }
 }

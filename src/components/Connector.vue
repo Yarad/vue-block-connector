@@ -41,8 +41,7 @@
                      'top': +allDrawingParams[key].top + 'px',
                      'z-index': 30
                  }"
-                 stroke-opacity="0.6"
-                 xmlns="http://www.w3.org/2000/svg">
+                 stroke-opacity="0.6">
 
                 <line :x1="allDrawingParams[key].lineStart.x"
                       :y1="allDrawingParams[key].lineStart.y"
@@ -50,6 +49,7 @@
                       :y2="allDrawingParams[key].lineEnd.y"
                       stroke="#04859D"
                       stroke-width="3"
+                      onclick="debugger"
                 />
 
                 <circle :cx="allDrawingParams[key].lineStart.x"
@@ -68,7 +68,7 @@
                 />
             </svg>
         </template>
-        <slot></slot>
+        <slot @mousedown.self="handleOnMouseDown($event)"></slot>
     </div>
 </template>
 
@@ -80,6 +80,15 @@
         props: {
             id: {
                 required: true
+            },
+            groupId: {
+                required: false
+            },
+            //TODO: реализовать. не используется
+            connectDifferentGroupsOnly: {
+                required: false,
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -93,7 +102,7 @@
             }
         },
         methods: {
-            ...mapMutations('connections', ['_currConnection', '_addConnection']),
+            ...mapMutations('connections', ['_currConnection', '_addConnection', '_destroyConnection']),
             handleOnMouseMove(e) {
                 this.makeConnectionLineParams = this.drawerParams({
                     start: this.lastElement,
@@ -133,15 +142,27 @@
                     return;
                 }
 
+                if (this.$props.groupId && this.$props.groupId == this.currConnection.start.__vue__.$props.groupId) {
+                    return;
+                }
+
                 let newConnection = {
                     start: this.currConnection.start.id,
                     end: e.currentTarget.id
                 }
-                debugger;
+
+                //debugger;
                 this._currConnection({});
                 this._addConnection(newConnection)
                 //console.log('end set => ');
                 //console.log(e.currentTarget);
+            },
+            handleOnLineClick(e, connectionObj) {
+                debugger;
+                this._destroyConnection({
+                    start: connectionObj.start.id,
+                    end: connectionObj.end.id,
+                });
             },
             drawerParams(connection) {
                 console.log('called');

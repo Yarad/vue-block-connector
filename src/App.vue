@@ -2,21 +2,21 @@
     <div id="app">
         <img alt="Vue logo" src="./assets/logo.png">
         <div>
-            <Connector id="c1">
-                <div class="my-block blue"></div>
+            <Connector id="c1" group-id="g1">
+                <div class="my-block blue">g1</div>
             </Connector>
 
-            <Connector id="c2">
-                <div class="my-block green"></div>
+            <Connector id="c2" group-id="g1">
+                <div class="my-block green">g1</div>
             </Connector>
         </div>
         <div>
-            <Connector id="c3">
-                <div class="my-block blue"></div>
+            <Connector id="c3" group-id="g2">
+                <div class="my-block blue">g2</div>
             </Connector>
 
-            <Connector  id="c4">
-                <div class="my-block green"></div>
+            <Connector  id="c4" group-id="g2">
+                <div class="my-block green">g2</div>
             </Connector>
         </div>
     </div>
